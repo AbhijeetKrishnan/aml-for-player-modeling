@@ -2,11 +2,14 @@
 
 # Script to generate trajectory files from the solution files automatically by calling the parser engine
 
+# Usage: ./traj_file_gen.sh [DOMAIN_FILE] [INSTANCES_FOLDER] [SOLUTIONS_FOLDER] [LOGS_FOLDER]
+# e.g. ./traj_file_gen.sh domain-sokoban.pddl instances solutions logs
+
 ENGINE=./trajectory/trajectory.py
-DOMAIN=./domain.pddl
-INSTANCES=./instances/*.pddl
-SOLUTIONS=./solutions/*
-LOGS=./logs
+DOMAIN=$1
+INSTANCES=$2/*.pddl
+SOLUTIONS=$3/*
+LOGS=$4
 
 inst_regex="instance-([0-9]+)\.pddl$"
 soln_regex="solution-([0-9]+)$"
