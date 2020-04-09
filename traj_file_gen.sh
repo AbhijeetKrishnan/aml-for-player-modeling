@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Script to generate trajectory files from the solution files automatically by calling the parser engine
+
 ENGINE=./trajectory/trajectory.py
 DOMAIN=./domain.pddl
 INSTANCES=./instances/*.pddl
