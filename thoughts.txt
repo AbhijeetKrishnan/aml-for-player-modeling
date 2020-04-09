@@ -21,3 +21,4 @@ For now -
 4. Attempt to generate longer trajectories with lesser file size for Sokoban
 6. Continue writing paper with current dataset
 7. Find small Sokoban instance to try generating a trajectory with
+8. Rebuild codebase and setup pipeline again after accidental deletion
