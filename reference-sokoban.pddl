@@ -1,5 +1,5 @@
 (define (domain sokoban-sequential)
-  (:requirements :typing :action-costs)
+  (:requirements :typing)
   (:types thing location direction - object
           player stone - thing)
   (:predicates (clear ?l - location)
@@ -8,7 +8,6 @@
 	       (IS-GOAL ?l - location)
 	       (IS-NONGOAL ?l - location)
                (MOVE-DIR ?from ?to - location ?dir - direction))
-  (:functions (total-cost) - number)
 
   (:action move
    :parameters (?p - player ?from ?to - location ?dir - direction)
@@ -41,7 +40,6 @@
                       (at ?s ?to)
                       (clear ?ppos)
                       (not (at-goal ?s))
-                      (increase (total-cost) 1)
                       )
    )
 
@@ -63,7 +61,6 @@
                       (at ?s ?to)
                       (clear ?ppos)
                       (at-goal ?s)
-                      (increase (total-cost) 1)
                       )
    )
 )

@@ -422,7 +422,7 @@
     (clear pos-10-04)
     (clear pos-10-09)
     (clear pos-10-10)
-    (= (total-cost) 0)
+    
   )
   (:goal (and
     (at-goal stone-01)
@@ -430,5 +430,5 @@
     (at-goal stone-03)
     (at-goal stone-04)
   ))
-  (:metric minimize (total-cost))
+  
 )
