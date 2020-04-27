@@ -15,7 +15,7 @@ class PDDL_Parser:
     # Tokens
     # ------------------------------------------
 
-    def scan_tokens(self, filename):
+    def scan_tokens(self, filename, is_solution=False):
         with open(filename,'r') as f:
             # Remove single line comments
             str = re.sub(r';.*$', '', f.read(), flags=re.MULTILINE).lower()
@@ -37,6 +37,8 @@ class PDDL_Parser:
                 list.append(t)
         if stack:
             raise Exception('Missing close parentheses')
+        if is_solution:
+            return list
         if len(list) != 1:
             raise Exception('Malformed expression')
         return list[0]
@@ -188,6 +190,16 @@ class PDDL_Parser:
             raise Exception('File ' + problem_filename + ' does not match problem pattern')
 
     #-----------------------------------------------
+    # Parse solution
+    #-----------------------------------------------
+
+    def parse_solution(self, solution_filename):
+        tokens = self.scan_tokens(solution_filename, is_solution=True)
+        for idx, action in enumerate(tokens):
+            tokens[idx] = Action(action[0], tuple(action[1:]), [], [], [], [])
+        return tokens
+
+    #-----------------------------------------------
     # Split predicates
     #-----------------------------------------------
 
@@ -213,20 +225,25 @@ if __name__ == '__main__':
     import sys, pprint
     domain = sys.argv[1]
     problem = sys.argv[2]
+    solution = sys.argv[3]
     parser = PDDL_Parser()
-    print('----------------------------')
-    pprint.pprint(parser.scan_tokens(domain))
-    print('----------------------------')
-    pprint.pprint(parser.scan_tokens(problem))
-    print('----------------------------')
+    #print('----------------------------')
+    #pprint.pprint(parser.scan_tokens(domain))
+    #print('----------------------------')
+    #pprint.pprint(parser.scan_tokens(problem))
+    #print('----------------------------')
+    #pprint.pprint(parser.scan_tokens(solution))
+    #print('----------------------------')
     parser.parse_domain(domain)
     parser.parse_problem(problem)
-    print('Domain name: ' + parser.domain_name)
-    for act in parser.actions:
-        print(act)
-    print('----------------------------')
-    print('Problem name: ' + parser.problem_name)
-    print('Objects: ' + str(parser.objects))
-    print('State: ' + str(parser.state))
-    print('Positive goals: ' + str(parser.positive_goals))
-    print('Negative goals: ' + str(parser.negative_goals))
+    parser.parse_solution(solution)
+    #print('Domain name: ' + parser.domain_name)
+    #for act in parser.actions:
+    #    print(act)
+    #print('----------------------------')
+    #print('Problem name: ' + parser.problem_name)
+    #print('Objects: ' + str(parser.objects))
+    #print('State: ' + str(parser.state))
+    #print('Positive goals: ' + str(parser.positive_goals))
+    #print('Negative goals: ' + str(parser.negative_goals))
+    #print('Solution ' + str(parser.solution))
