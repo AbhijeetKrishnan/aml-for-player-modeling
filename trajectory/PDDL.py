@@ -195,9 +195,12 @@ class PDDL_Parser:
 
     def parse_solution(self, solution_filename):
         tokens = self.scan_tokens(solution_filename, is_solution=True)
-        for idx, action in enumerate(tokens):
-            tokens[idx] = Action(action[0], tuple(action[1:]), [], [], [], [])
-        return tokens
+        for idx, grounded_action in enumerate(tokens):
+            for action in self.actions:
+                if grounded_action[0] == action.name:
+                    # ground action here
+                    tokens[idx] = Action(action.name, tuple(grounded_action[1:]), action.positive_preconditions, action.negative_preconditions, action.add_effects, action.del_effects)
+        self.solution = tokens
 
     #-----------------------------------------------
     # Split predicates
