@@ -23,24 +23,18 @@ class Trajectory:
             state = parser.state
             if not planner.applicable(state, parser.positive_goals, parser.negative_goals):
                 for grounded_action in parser.solution:
-                    print(grounded_action)
                     if planner.applicable(state, grounded_action.positive_preconditions, grounded_action.negative_preconditions):
-                        print('Applicable!')
                         state = planner.apply(state, grounded_action.add_effects, grounded_action.del_effects)
                         self.states.append(state)
                         self.actions.append(grounded_action)
-            print(len(self.states))
 
     def __get_state_actions(self):
             states = []
-            #print(self.states, len(self.states))
             for state in self.states[1:]:
-                #print('State:', state)
                 states.append('(:state ' + ' '.join(['(' + ' '.join(predicate) + ')' for predicate in state]) + ')')
             actions = []
             for action in self.actions:
                 actions.append('(:action (' + ' '.join([action.name] + list(action.parameters)) + '))')
-            #print(states, actions)
             return '\n\n'.join([state + '\n\n' + action for state, action in zip(states, actions)])
     
     def __str__(self):
@@ -51,8 +45,8 @@ class Trajectory:
 (:init {' '.join(['(' + ' '.join(predicate) + ')' for predicate in self.states[0]])})
 
 {self.__get_state_actions()}
-)"""
 
+)"""
 
 if __name__ == '__main__':
     import sys
@@ -61,4 +55,4 @@ if __name__ == '__main__':
     problem = sys.argv[2]
     solution = sys.argv[3]
     trajectory = Trajectory(domain, problem, solution)
-    #print(trajectory)
+    print(trajectory)

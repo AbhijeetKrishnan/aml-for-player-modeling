@@ -3,7 +3,7 @@
 # Script to call FastDownward to generate a solution for all instances in a given folder
 
 # Usage: ./soln_file_gen.sh [DOMAIN] [INSTANCES_FOLDER] [SOLUTIONS_FOLDER]
-# e.g. ./soln_file_gen.sh domain-sokoban.pddl instances solutions
+# e.g. ./soln_file_gen.sh reference-sokoban.pddl instances solutions
 
 FAST_DOWNWARD=~/downward/fast-downward.py
 FAST_DOWNWARD_ARGS="--alias lama-first" # uses lama-2011 alias to return the first solution found

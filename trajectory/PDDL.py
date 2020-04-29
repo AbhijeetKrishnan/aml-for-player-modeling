@@ -198,8 +198,13 @@ class PDDL_Parser:
         for idx, grounded_action in enumerate(tokens):
             for action in self.actions:
                 if grounded_action[0] == action.name:
-                    # ground action here
-                    tokens[idx] = Action(action.name, tuple(grounded_action[1:]), action.positive_preconditions, action.negative_preconditions, action.add_effects, action.del_effects)
+                    variables = [var for var, _ in action.parameters]
+                    assignment = tuple(grounded_action[1:])
+                    positive_preconditions = action.replace(action.positive_preconditions, variables, assignment)
+                    negative_preconditions = action.replace(action.negative_preconditions, variables, assignment)
+                    add_effects = action.replace(action.add_effects, variables, assignment)
+                    del_effects = action.replace(action.del_effects, variables, assignment) 
+                    tokens[idx] = Action(action.name, assignment, positive_preconditions, negative_preconditions, add_effects, del_effects)
         self.solution = tokens
 
     #-----------------------------------------------
