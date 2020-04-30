@@ -19,6 +19,11 @@ Could try adjusting the Madagascar memory limit and trying with the existing tra
 Which domain + problem to use though? Could use FAMA dataset itself
 No problem file in the FAMA dataset, just trajectories
 Use Aaron's instances?
+Even Aaron's instances proving too big to work, segfault and no solution
+One action and 2 states (init + subsequent) worked
+Might want to use trajectory init states and rover domain to do tests
+Need to write evaluation code to evaluate an action model with reference action model
+Need to write trajectory generator starting from initial state if using random walk method
 
 For now -
 3. Experiment with using Aaron's code for AML and evaluate it
@@ -26,4 +31,4 @@ For now -
 6. Continue writing paper with current dataset
 7. Find small Sokoban instance to try generating a trajectory with
 8. Rebuild codebase and setup pipeline again after accidental deletion
-9. 
+9. Write evaluation code
