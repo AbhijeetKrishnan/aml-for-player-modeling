@@ -29,13 +29,13 @@ class Trajectory:
                         self.actions.append(grounded_action)
 
     def __get_state_actions(self):
-            states = []
-            for state in self.states[1:]:
-                states.append('(:state ' + ' '.join(['(' + ' '.join(predicate) + ')' for predicate in state]) + ')')
             actions = []
             for action in self.actions:
                 actions.append('(:action (' + ' '.join([action.name] + list(action.parameters)) + '))')
-            return '\n\n'.join([state + '\n\n' + action for state, action in zip(states, actions)])
+            states = []
+            for state in self.states[1:]:
+                states.append('(:state ' + ' '.join(['(' + ' '.join(predicate) + ')' for predicate in state]) + ')')
+            return '\n\n'.join([action + '\n\n' + state for action, state in zip(actions, states)])
     
     def __str__(self):
         return f"""(trajectory

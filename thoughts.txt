@@ -15,6 +15,10 @@ Tips from them included how to increase Madagascar memory limit and some obscure
 Could try to design a Sokoban domain with lesser size
 Could also use a smaller initial state to generate trajectories randomly - have asked follow-up questions to the authors to clarify the "random" walk procedure
 Could try adjusting the Madagascar memory limit and trying with the existing trajectories - was still taking a lot of time before I stopped the search though
+(2020-04-28) Rebuilt codebase (excluding evaluation code), need to test it with a smaller trajectory to ensure pipeline works
+Which domain + problem to use though? Could use FAMA dataset itself
+No problem file in the FAMA dataset, just trajectories
+Use Aaron's instances?
 
 For now -
 3. Experiment with using Aaron's code for AML and evaluate it
@@ -22,3 +26,4 @@ For now -
 6. Continue writing paper with current dataset
 7. Find small Sokoban instance to try generating a trajectory with
 8. Rebuild codebase and setup pipeline again after accidental deletion
+9. 

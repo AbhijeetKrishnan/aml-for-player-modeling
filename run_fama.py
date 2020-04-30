@@ -13,11 +13,17 @@ logs_folder = sys.argv[2]
 M = parse_model(model)
 
 # Define the set of observations
-T = [parse_trajectory(os.path.join(logs_folder, log), M) for log in os.listdir(logs_folder)]
-O = [t.observe(1, action_observability=1) for t in T]
+for log in os.listdir(logs_folder):
+    print('Generating model for', log)
 
-# Create learning task
-lt = LearningTask(M, O)
+    T = [parse_trajectory(os.path.join(logs_folder, log), M)]
+    O = [t.observe(1, action_observability=1) for t in T]
 
-solution = lt.learn()
-print(solution.learned_model)
+    # Create learning task
+    lt = LearningTask(M, O)
+
+    solution = lt.learn()
+    try:
+        print(solution.learned_model)
+    except AttributeError:
+        print('No solution found')
