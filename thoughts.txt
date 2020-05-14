@@ -24,11 +24,29 @@ One action and 2 states (init + subsequent) worked
 Might want to use trajectory init states and rover domain to do tests
 Need to write evaluation code to evaluate an action model with reference action model
 Need to write trajectory generator starting from initial state if using random walk method
+Need to start work on paper
+General thread of paper is as follows -
+- Key contribution
+  - idea of using action models as player models (needs argument in favour of rule-based models)
+  - application of AML algorithms (FAMA) to learn the player models from interaction logs
+  - demonstration of functionality via a method to quantify user skill 
+  - potential application of other paper to generate levels based on this
+- Limitations
+  - No theoretical or psychological basis for why learned action models should correlate with human mental model (could augment AML to incorporate this)
+  - No empirical analysis/study of whether predictions match actual skill level in playtesters
+  - Usage of individual domain actions as "skills" is not useful since we might want to test acquisition of higher-order skills which combine actions
+  - Practical limitations to size of trajectories that can be used (in state space and length)i
+  - Not all games can be represented in PDDL, theoretically or practically (could include turn-based games (e.g. Pokemon series, Chrono Trigger), tile-based board and puzzle games (Catan, Baba is You)
+Classification according to Smith et. al.'s taxonomy - Individual, Generative + Descriptive, Game Actions, Induced (novel addition to taxonomy)
+Why rule-based models?
+- feedback regarding player skill might be psychologically harmful to players (needs transparency and auditability)
+- easily generalizable to any domain which can be modeled in FO-logic
+- rich body of existing work in learning rule-based models (AML)
 
 For now -
 3. Experiment with using Aaron's code for AML and evaluate it
 4. Attempt to generate longer trajectories with lesser file size for Sokoban
 6. Continue writing paper with current dataset
 7. Find small Sokoban instance to try generating a trajectory with
-8. Rebuild codebase and setup pipeline again after accidental deletion
-9. Write evaluation code
+8. Write 2 small levels which can be used with the IPC Sokoban domain to learn an action model (using both trajectories)
+9. Write a converter which can turn a Sokoban level representation into a PDDL problem file for use with the IPC Sokoban domain
