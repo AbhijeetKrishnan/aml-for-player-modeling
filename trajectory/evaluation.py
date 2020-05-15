@@ -1,19 +1,20 @@
 #!/usr/bin/env python
 
-class Evaluation:
-    def __init__(self, reference, target):
+# Usage: ./evaluation.py [REFERENCE_MODEL] [TARGET_MODEL]
+# e.g. ./evaluation.py ../reference-sokoban.pddl ../models-custom/model-2.pddl
+
+class ActionEvaluation:
+    def __init__(self, ref_action, tar_action):
         self.tp = 0
         self.tn = 0
         self.fp = 0
         self.fn = 0
+        self.name = ref_action.name
 
-        for ref_action in reference.actions:
-            for tar_action in target.actions:
-                if ref_action.name == tar_action.name:
-                    self.__compare_predicate_list(ref_action.positive_preconditions, tar_action.positive_preconditions)
-                    self.__compare_predicate_list(ref_action.negative_preconditions, tar_action.negative_preconditions)
-                    self.__compare_predicate_list(ref_action.add_effects, tar_action.add_effects)
-                    self.__compare_predicate_list(ref_action.del_effects, ref_action.del_effects)
+        self.__compare_predicate_list(ref_action.positive_preconditions, tar_action.positive_preconditions)
+        self.__compare_predicate_list(ref_action.negative_preconditions, tar_action.negative_preconditions)
+        self.__compare_predicate_list(ref_action.add_effects, tar_action.add_effects)
+        self.__compare_predicate_list(ref_action.del_effects, ref_action.del_effects)
 
     def __compare_predicate_list(self, ref_pred_list, tar_pred_list):
         for ref_pred in ref_pred_list:
@@ -48,13 +49,22 @@ class Evaluation:
         return 2 * self.precision * self.recall / (self.precision + self.recall)
 
     def __str__(self):
-        return f"""         True False
-Positive {self.tp:4} {self.fp:5}
-Negative {self.tn:4} {self.fn:5}
+        return f'{self.name} {self.f1}'
+    
 
-Precision = {self.precision:.4f}
-Recall = {self.recall:.4f}
-F1-score = {self.f1:.4f}"""
+class Evaluation:
+    def __init__(self, reference, target):
+        self.action_evaluations = []
+        for ref_action in reference.actions:
+            for tar_action in target.actions:
+                if ref_action.name == tar_action.name:
+                    self.action_evaluations.append(ActionEvaluation(ref_action, tar_action))
+
+
+    def __str__(self):
+        return f"""Name F1-score
+{chr(10).join([str(action_evaluation) for action_evaluation in self.action_evaluations])}
+"""
 
 if __name__ == '__main__':
     import sys
