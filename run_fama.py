@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+# Usage: ./run_fama.py [EMPTY_DOMAIN] [LOGS_FOLDER] [MODELS_FOLDER]
+# e.g. ./run_fama.py empty-sokoban.pddl logs models
+
 import sys, os
 
 from meta_planning.parsers import parse_trajectory, parse_model
@@ -13,20 +16,22 @@ models_folder = sys.argv[3]
 # Define the initial model
 M = parse_model(model)
 
-# Define the set of observations
+T = []
+# Define the set of trajectories
 for log in os.listdir(logs_folder):
-    print('Generating model for', log)
+    print('Generating trajectory for', log)
     id = log.split('.')[0].split('-')[1]
 
-    T = [parse_trajectory(os.path.join(logs_folder, log), M)]
-    O = [t.observe(1, action_observability=1) for t in T]
+    T.append(parse_trajectory(os.path.join(logs_folder, log), M))
 
-    # Create learning task
-    lt = LearningTask(M, O)
+O = [t.observe(1, action_observability=1) for t in T]
 
-    solution = lt.learn()
-    try:
-        with open(os.path.join(models_folder, f'model-{id}.pddl'), 'w') as model:
-            model.write(str(solution.learned_model))
-    except AttributeError:
-        print('No solution found')
+# Create learning task
+lt = LearningTask(M, O)
+
+solution = lt.learn()
+try:
+    with open(os.path.join(models_folder, f'model-{id}.pddl'), 'w') as model:
+        model.write(str(solution.learned_model))
+except AttributeError:
+    print('No solution found')

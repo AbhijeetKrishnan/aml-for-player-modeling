@@ -15,48 +15,58 @@ class PDDL_Problem:
 
         self.objects['direction'] = ['dir-down', 'dir-left', 'dir-right', 'dir-up']
 
-        player_cnt = 1
+        player_cnt = 1 # never more than 1 player in practice, but kept to be similar to stone_cnt
         stone_cnt = 1
 
         with open(level_file) as level:
-            grid = level.readlines()
-            for idx, row in enumerate(grid):
+            grid = []
+            lines = level.readlines()
+            for row in lines:
                 row = row.strip('\n')
-                grid[idx] = [row[i:i+1] for i in range(0, len(row), 1)]
+                if row and row[0] != ';': # ignore empty lines (only '\n') and comments
+                    grid.append([row[i:i+1] for i in range(0, len(row), 1)])
             width, height = len(grid[0]), len(grid)
             self.grid = grid
+
             for j in range(height):
                 for i in range(width):
                     symbol = grid[j][i]
-                    pos = f'pos-{i+1:02}-{j+1:02}'
+                    pos = f'pos-{i+1:02}-{j+1:02}' # rows and cols are 1-indexed
                     self.objects['location'].append(pos)
-                    if symbol == '#':
+                    if symbol == '#': # wall
                         self.state.append(['IS-NONGOAL', pos])
-                    elif symbol == '.':
+                    elif symbol == '.': # goal
                         self.state.append(['IS-GOAL', pos])
                         self.state.append(['clear', pos])
-                    elif symbol == '*':
+                    elif symbol == '*': # stone on goal
                         stone = f'stone-{stone_cnt:02}'
                         self.objects['stone'].append(stone)
                         self.state.append(['IS-GOAL', pos])
                         self.state.append(['at', stone, pos])
                         self.state.append(['at-goal', stone])
                         stone_cnt += 1
-                    elif symbol == '$':
+                    elif symbol == '$': # stone
                         stone = f'stone-{stone_cnt:02}'
                         self.objects['stone'].append(stone)
                         self.state.append(['IS-NONGOAL', pos])
                         self.state.append(['at', stone, pos])
                         stone_cnt += 1
-                    elif symbol == '@':
+                    elif symbol == '@': # player
                         player = f'player-{player_cnt:02}'
                         self.objects['player'].append(player)
                         self.state.append(['IS-NONGOAL', pos])
                         self.state.append(['at', player, pos])
                         player_cnt += 1
+                    elif symbol == '%': # player on goal
+                        player = f'player-{player_cnt:02}'
+                        self.objects['player'].append(player)
+                        self.state.append(['at', player, pos])
+                        self.state.append(['IS-GOAL', pos])
+                        player_cnt += 1
                     else:
                         self.state.append(['IS-NONGOAL', pos])
                         self.state.append(['clear', pos])
+
             for j in range(height):
                 for i in range(width):
                     old_pos = f'pos-{i+1:02}-{j+1:02}'
@@ -69,7 +79,7 @@ class PDDL_Problem:
                 self.positive_goals.append(['at-goal', f'stone-{i:02}'])
 
     def __str__(self):
-        NL = '\n'
+        NL = '\n' # '\' not permitted in f-strings
         NL_IND = '\n    '
         return f"""{NL.join([';; ' + ''.join(row) for row in self.grid])}
 
