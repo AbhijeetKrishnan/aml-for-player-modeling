@@ -1,0 +1,58 @@
+(define (domain sokoban-sequential)
+(:requirements :typing)
+(:predicates
+	(clear ?l - location)
+	(at ?t - thing ?l - location)
+	(at-goal ?s - stone)
+	(is-goal ?l - location)
+	(is-nongoal ?l - location)
+	(move-dir ?from - location ?to - location ?dir - direction)
+)
+
+(:action move
+	:parameters (?p - player ?from - location ?to - location ?dir - direction)
+	:precondition (and (move-dir ?o2 ?o3 ?o4) (clear ?o3) (at ?o1 ?o2))
+	:effect (and 
+		(clear ?o2)
+		(is-nongoal ?o3)
+		(is-nongoal ?o2)
+		(not (at ?o1 ?o2))
+		(not (clear ?o3))
+		(at ?o1 ?o3)
+	)
+)
+
+(:action push-to-nongoal
+	:parameters (?p - player ?s - stone ?ppos - location ?from - location ?to - location ?dir - direction)
+	:precondition (and (is-nongoal ?o3) (at ?o1 ?o5) (at ?o2 ?o3) (at ?o1 ?o4) (move-dir ?o4 ?o3 ?o6) (is-goal ?o3) (move-dir ?o5 ?o5 ?o6) (is-nongoal ?o4) (clear ?o4) (at ?o2 ?o4) (is-nongoal ?o5) (at ?o2 ?o5))
+	:effect (and 
+		(at-goal ?o2)
+		(not (at ?o1 ?o5))
+		(move-dir ?o3 ?o5 ?o6)
+		(move-dir ?o5 ?o3 ?o6)
+		(move-dir ?o4 ?o5 ?o6)
+		(move-dir ?o5 ?o4 ?o6)
+		(is-goal ?o4)
+		(clear ?o5)
+		(not (is-goal ?o3))
+		(clear ?o3)
+		(move-dir ?o4 ?o4 ?o6)
+		(at ?o1 ?o3)
+		(not (is-nongoal ?o5))
+		(not (at ?o2 ?o5))
+	)
+)
+
+(:action push-to-goal
+	:parameters (?p - player ?s - stone ?ppos - location ?from - location ?to - location ?dir - direction)
+	:precondition (and (clear ?o5) (is-goal ?o5) (is-nongoal ?o4) (at ?o1 ?o3) (at ?o2 ?o4))
+	:effect (and 
+		(at-goal ?o2)
+		(at ?o1 ?o4)
+		(not (clear ?o5))
+		(clear ?o3)
+		(not (at ?o1 ?o3))
+		(not (at ?o2 ?o4))
+		(at ?o2 ?o5)
+	)
+))
