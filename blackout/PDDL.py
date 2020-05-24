@@ -166,7 +166,11 @@ class PDDL_Parser:
                     while group:
                         if group[0] == '-':
                             group.pop(0)
-                            self.objects[group.pop(0)] = object_list
+                            theType = group.pop[0]
+                            if theType in self.objects:
+                                self.objects[theType].extend(object_list)
+                            else:
+                                self.objects[theType] = object_list
                             object_list = []
                         else:
                             object_list.append(group.pop(0))
