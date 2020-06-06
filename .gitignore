@@ -1,5 +1,5 @@
 # Log files and solutions files
-*.log
+# *.log
 *.soln
 thoughts.txt
 
@@ -61,7 +61,7 @@ cover/
 *.pot
 
 # Django stuff:
-*.log
+# *.log
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
@@ -141,3 +141,7 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# Vim file backups
+*~
+

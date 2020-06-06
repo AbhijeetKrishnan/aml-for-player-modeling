@@ -49,7 +49,7 @@ class ActionEvaluation:
         return 2 * self.precision * self.recall / (self.precision + self.recall)
 
     def __str__(self):
-        return f'{self.name} {self.f1}'
+        return '{:15s} {:6.4f}   {:6.4f}   {:6.4f}'.format(self.name, self.f1, self.precision, self.recall,)
     
 
 class Evaluation:
@@ -62,7 +62,7 @@ class Evaluation:
 
 
     def __str__(self):
-        return f"""Name F1-score
+        return f"""Name           F1-score Precision Recall
 {chr(10).join([str(action_evaluation) for action_evaluation in self.action_evaluations])}
 """
 
