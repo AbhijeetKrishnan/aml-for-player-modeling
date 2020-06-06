@@ -1,6 +1,7 @@
 # Log files and solutions files
 *.log
 *.soln
+thoughts.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

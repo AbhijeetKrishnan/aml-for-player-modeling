@@ -1,8 +1,0 @@
-(push-to-nongoal player-01 stone-01 pos-01-01 pos-01-02 pos-01-03 dir-down)
-(move player-01 pos-01-02 pos-02-02 dir-right)
-(move player-01 pos-02-02 pos-02-03 dir-down)
-(move player-01 pos-02-03 pos-02-04 dir-down)
-(move player-01 pos-02-04 pos-01-04 dir-left)
-(push-to-nongoal player-01 stone-01 pos-01-04 pos-01-03 pos-01-02 dir-up)
-(push-to-goal player-01 stone-01 pos-01-03 pos-01-02 pos-01-01 dir-up)
-; cost = 7 (unit cost)
