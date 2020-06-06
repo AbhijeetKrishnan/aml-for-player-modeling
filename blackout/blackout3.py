@@ -2,6 +2,8 @@
 
 from PDDL import PDDL_Parser
 import pprint
+import sys
+import time
 import blackout2
 import invariants
 
@@ -10,6 +12,8 @@ class trajectory3(blackout2.trajectoryRevised):
 
     def __init__(self, filename, domain='reconstructed'):
         super().__init__(filename, domain)  # Run all the code from my previous trajectory scripts
+        self.times['wallclock_stage3_start'] = time.time_ns()
+        self.times['process_stage3_start'] = time.process_time_ns()
         print('\n=========== Compute Invariants ==============\n')
         self.invariantsObject = invariants.invariants(self)
         self.invariantsList = self.invariantsObject.invariantList
@@ -163,6 +167,18 @@ class trajectory3(blackout2.trajectoryRevised):
                                             else:
                                                 print('      Confirming negative precondition:', precon)
                                                 act.defNegPrecons.add(precon)
+        self.times['wallclock_stage3_end'] = time.time_ns()
+        self.times['process_stage3_end'] = time.process_time_ns()
+        self.times['wallclock_global_end'] = time.time_ns()
+        self.times['process_global_end'] = time.process_time_ns()
+        sys.stderr.write('\nStage 1 wall-clock time: {:,} nanoseconds\n'.format(self.times['wallclock_stage1_end'] - self.times['wallclock_stage1_start']))
+        sys.stderr.write('Stage 1 process time:    {:,} nanoseconds\n'.format(self.times['process_stage1_end'] - self.times['process_stage1_start']))
+        sys.stderr.write('Stage 2 wall-clock time: {:,} nanoseconds\n'.format(self.times['wallclock_stage2_end'] - self.times['wallclock_stage2_start']))
+        sys.stderr.write('Stage 2 process time:    {:,} nanoseconds\n'.format(self.times['process_stage2_end'] - self.times['process_stage2_start']))
+        sys.stderr.write('Stage 3 wall-clock time: {:,} nanoseconds\n'.format(self.times['wallclock_stage3_end'] - self.times['wallclock_stage3_start']))
+        sys.stderr.write('Stage 3 process time:    {:,} nanoseconds\n'.format(self.times['process_stage3_end'] - self.times['process_stage3_start']))
+        sys.stderr.write('Total   wall-clock time: {:,} nanoseconds\n'.format(self.times['wallclock_global_end'] - self.times['wallclock_global_start']))
+        sys.stderr.write('Total   process time:    {:,} nanoseconds\n'.format(self.times['process_global_end'] - self.times['process_global_start']))
 
 
 

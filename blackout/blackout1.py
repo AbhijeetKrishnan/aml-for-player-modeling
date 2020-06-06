@@ -2,6 +2,8 @@
 
 from PDDL import PDDL_Parser
 import pprint
+import time
+import sys
 
 class trajectory:
     def parseObjects(self, objTokens):
@@ -120,6 +122,8 @@ class trajectory:
             self.typeclasses[typ] = container
 
     def __init__(self, filename, domainName='reconstructed'):
+        self.times = {'wallclock_global_start': time.time_ns(), 'wallclock_stage1_start': time.time_ns(),
+                'process_global_start': time.process_time_ns(), 'process_stage1_start': time.process_time_ns()}
         self.domainName = domainName
         self.parser = PDDL_Parser()
         self.tokens = self.parser.scan_tokens(filename)
@@ -147,6 +151,10 @@ class trajectory:
         self.refineActions(self.tokens)
         pprint.pprint(self.actions)
         self.genTypeclasses()
+        self.times['wallclock_stage1_end'] = time.time_ns()
+        self.times['process_stage1_end'] = time.process_time_ns()
+        sys.stderr.write('\nStage 1 wall-clock time: {:,} nanoseconds\n'.format(self.times['wallclock_stage1_end'] - self.times['wallclock_stage1_start']))
+        sys.stderr.write('Stage 1 process time:    {:,} nanoseconds\n'.format(self.times['process_stage1_end'] - self.times['process_stage1_start']))
 
     def __repr__(self):
         fmtTypeclasses = ['{} - {}'.format(k, v) for k, v in self.typeclasses.items()]

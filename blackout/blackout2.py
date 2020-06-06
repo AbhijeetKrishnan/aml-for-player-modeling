@@ -3,6 +3,8 @@
 from PDDL import PDDL_Parser
 import pprint
 import blackout1
+import sys
+import time
 
 # OK, so the goal here is to compute the minimum set of preconditions to account for all the actions which the player was not allowed to take.
 # Time to classify preconditions.
@@ -162,9 +164,16 @@ class trajectoryRevised(blackout1.trajectory):
 
     def __init__(self, filename, domain='reconstructed'):
         super().__init__(filename, domain)  # Run all the code from my previous trajectory script
+        self.times['wallclock_stage2_start'] = time.time_ns()
+        self.times['process_stage2_start'] = time.process_time_ns()
         print('\n=========== Failed Action Analysis ==============\n')
         self.reviseActions()
-
+        self.times['wallclock_stage2_end'] = time.time_ns()
+        self.times['process_stage2_end'] = time.process_time_ns()
+        sys.stderr.write('\nStage 1 wall-clock time: {:,} nanoseconds\n'.format(self.times['wallclock_stage1_end'] - self.times['wallclock_stage1_start']))
+        sys.stderr.write('Stage 1 process time:    {:,} nanoseconds\n'.format(self.times['process_stage1_end'] - self.times['process_stage1_start']))
+        sys.stderr.write('Stage 2 wall-clock time: {:,} nanoseconds\n'.format(self.times['wallclock_stage2_end'] - self.times['wallclock_stage2_start']))
+        sys.stderr.write('Stage 2 process time:    {:,} nanoseconds\n'.format(self.times['process_stage2_end'] - self.times['process_stage2_start']))
 
 class actionRevised(blackout1.actionCandidate):
     def __init__(self, candidate):
