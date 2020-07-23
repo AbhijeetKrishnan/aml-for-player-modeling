@@ -47,10 +47,10 @@ In this, we compare Blackout, our novel algorithm for AML, with FAMA, a SOTA alg
 1. Locate the instances L1, L2 and L3 under `blackout/trajectory` as `small-*.pddl`, `medium-*.pddl` and `large-*.pddl` respectively (the verbose variants contained failed actions which only Blackout can use)
 2. Learn 3 models using FAMA following the steps in the feasibility evaluation
 3. Learn 3 models using Blackout following the steps below for each of L1, L2 and L3 -
-    1. Run Blackout stage 1 using `python blackout1.py trajectory/[size]-verbose.log model/[size]-blackout-1.pddl sokoban-sequential`
-    2. Run Blackout stage 2 using `python blackout2.py trajectory/[size]-verbose.log model/[size]-blackout-2.pddl sokoban-sequential`
-    3. Run Blackout stage 3 using `python blackout3.py trajectory/[size]-verbose.log model/[size]-blackout-3.pddl sokoban-sequential`
-4. Run the evaluation script to obtain precision and recall values for each learned model using `python evaluation.py reference-sokoban.pddl path/to/model`
+    1. Run Blackout stage 1 using `python blackout1.py trajectory/[size]-verbose.log model/[size]-blackout-1.pddl sokoban-sequential` in the `blackout/` folder
+    2. Run Blackout stage 2 using `python blackout2.py trajectory/[size]-verbose.log model/[size]-blackout-2.pddl sokoban-sequential` in the `blackout/` folder
+    3. Run Blackout stage 3 using `python blackout3.py trajectory/[size]-verbose.log model/[size]-blackout-3.pddl sokoban-sequential` in the `blackout/` folder
+4. Run the evaluation script to obtain precision and recall values for each learned model using `python evaluation.py reference-sokoban.pddl path/to/model` in the `trajectory` folder (not to be confused with `blackout/trajectory`)
 
 ## Performance Evaluation
 The evaluation procedure is described in sufficient detail in the paper for reproducibility
