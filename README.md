@@ -44,43 +44,13 @@ In this, we show that AML is a domain-agnostic approach to player modeling by su
 In this, we compare Blackout, our novel algorithm for AML, with FAMA, a SOTA algorithm for AML, for their suitability to player modeling
 
 ## Learned Model Evaluation
+1. Locate the instances L1, L2 and L3 under `blackout/trajectory` as `small-*.pddl`, `medium-*.pddl` and `large-*.pddl` respectively (the verbose variants contained failed actions which only Blackout can use)
+2. Learn 3 models using FAMA following the steps in the feasibility evaluation
+3. Learn 3 models using Blackout following the steps below for each of L1, L2 and L3 -
+    1. Run Blackout stage 1 using `python blackout1.py trajectory/[size]-verbose.log model/[size]-blackout-1.pddl sokoban-sequential`
+    2. Run Blackout stage 2 using `python blackout2.py trajectory/[size]-verbose.log model/[size]-blackout-2.pddl sokoban-sequential`
+    3. Run Blackout stage 3 using `python blackout3.py trajectory/[size]-verbose.log model/[size]-blackout-3.pddl sokoban-sequential`
+4. Run the evaluation script to obtain precision and recall values for each learned model using `python evaluation.py reference-sokoban.pddl path/to/model`
 
 ## Performance Evaluation
-
 The evaluation procedure is described in sufficient detail in the paper for reproducibility
-
-cd blackout
- # Remove the :action-failed lines and whatnot from the trajectory files, so FAMA can use them
-cd trajectory
-python strip-verbose.py small-verbose.log small-brief.log
-python strip-verbose.py medium-verbose.log medium-brief.log
-python strip-verbose.py large-verbose.log large-brief.log
-cd ..
- # Run blackout
-python blackout1.py trajectory/small-verbose.log model/small-blackout-1.pddl sokoban-sequential
-python blackout2.py trajectory/small-verbose.log model/small-blackout-2.pddl sokoban-sequential
-python blackout3.py trajectory/small-verbose.log model/small-blackout-3.pddl sokoban-sequential
-python blackout1.py trajectory/medium-verbose.log model/medium-blackout-1.pddl sokoban-sequential
-python blackout2.py trajectory/medium-verbose.log model/medium-blackout-2.pddl sokoban-sequential
-python blackout3.py trajectory/medium-verbose.log model/medium-blackout-3.pddl sokoban-sequential
-python blackout1.py trajectory/large-verbose.log model/large-blackout-1.pddl sokoban-sequential
-python blackout2.py trajectory/large-verbose.log model/large-blackout-2.pddl sokoban-sequential
-python blackout3.py trajectory/large-verbose.log model/large-blackout-3.pddl sokoban-sequential
- # Run FAMA
- ##TODO insert commands to run FAMA on trajectory/small-brief.log and trajectory/medium-brief.log
- ## and put the results in model/small-FAMA.pddl and model/medium-FAMA.pddl
- ## here
- # Run evaluation script
-cd ../trajectory
-python evaluation.py ../blackout/sokoban-sequential.pddl ../blackout/model/small-blackout-1.pddl
-python evaluation.py ../blackout/sokoban-sequential.pddl ../blackout/model/small-blackout-2.pddl
-python evaluation.py ../blackout/sokoban-sequential.pddl ../blackout/model/small-blackout-3.pddl
-python evaluation.py ../blackout/sokoban-sequential.pddl ../blackout/model/small-FAMA.pddl
-python evaluation.py ../blackout/sokoban-sequential.pddl ../blackout/model/medium-blackout-1.pddl
-python evaluation.py ../blackout/sokoban-sequential.pddl ../blackout/model/medium-blackout-2.pddl
-python evaluation.py ../blackout/sokoban-sequential.pddl ../blackout/model/medium-blackout-3.pddl
-python evaluation.py ../blackout/sokoban-sequential.pddl ../blackout/model/medium-FAMA.pddl
-python evaluation.py ../blackout/sokoban-sequential.pddl ../blackout/model/large-blackout-1.pddl
-python evaluation.py ../blackout/sokoban-sequential.pddl ../blackout/model/large-blackout-2.pddl
-python evaluation.py ../blackout/sokoban-sequential.pddl ../blackout/model/large-blackout-3.pddl
-
