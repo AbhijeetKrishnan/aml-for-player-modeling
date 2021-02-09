@@ -36,7 +36,7 @@ class ActionEvaluation:
         for ref_pred in ref_pred_list:
             found = False
             for tar_pred in tar_pred_list:
-                if ref_pred[0] == tar_pred[0]:
+                if ref_pred == tar_pred:
                     self.tp += 1
                     found = True
                     break
@@ -46,7 +46,7 @@ class ActionEvaluation:
         for tar_pred in tar_pred_list:
             found = False
             for ref_pred in ref_pred_list:
-                if ref_pred[0] == tar_pred[0]:
+                if ref_pred == tar_pred:
                     found = True
                     break
             if not found:
