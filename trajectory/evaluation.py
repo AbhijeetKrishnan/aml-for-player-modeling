@@ -3,6 +3,19 @@
 # Usage: ./evaluation.py [REFERENCE_MODEL] [TARGET_MODEL]
 # e.g. ./evaluation.py ../reference-sokoban.pddl ../models-custom/model-2.pddl
 
+def canonicalizeActionParameterNames(action):
+    parMap = {}
+    for idx, par in enumerate(action.parameters):
+        parMap[par[0]] = '?{}'.format(idx + 1)
+    for predList in [action.parameters, action.positive_preconditions, action.negative_preconditions, action.add_effects, action.del_effects]:
+        # print('Canonicalizing', predList)
+        for pred in predList:
+            # print(pred)
+            for idx, param in enumerate(pred):
+                if param in parMap:
+                    pred[idx] = parMap[param]
+        # print('    Changed to', predList)
+
 class ActionEvaluation:
     def __init__(self, ref_action, tar_action):
         self.tp = 0
@@ -10,6 +23,9 @@ class ActionEvaluation:
         self.fp = 0
         self.fn = 0
         self.name = ref_action.name
+
+        canonicalizeActionParameterNames(ref_action)
+        canonicalizeActionParameterNames(tar_action)
 
         self.__compare_predicate_list(ref_action.positive_preconditions, tar_action.positive_preconditions)
         self.__compare_predicate_list(ref_action.negative_preconditions, tar_action.negative_preconditions)
