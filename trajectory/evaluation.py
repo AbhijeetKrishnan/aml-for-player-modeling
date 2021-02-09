@@ -14,13 +14,13 @@ class ActionEvaluation:
         self.__compare_predicate_list(ref_action.positive_preconditions, tar_action.positive_preconditions)
         self.__compare_predicate_list(ref_action.negative_preconditions, tar_action.negative_preconditions)
         self.__compare_predicate_list(ref_action.add_effects, tar_action.add_effects)
-        self.__compare_predicate_list(ref_action.del_effects, ref_action.del_effects)
+        self.__compare_predicate_list(ref_action.del_effects, tar_action.del_effects)
 
     def __compare_predicate_list(self, ref_pred_list, tar_pred_list):
         for ref_pred in ref_pred_list:
             found = False
             for tar_pred in tar_pred_list:
-                if ref_pred == tar_pred:
+                if ref_pred[0] == tar_pred[0]:
                     self.tp += 1
                     found = True
                     break
@@ -30,7 +30,7 @@ class ActionEvaluation:
         for tar_pred in tar_pred_list:
             found = False
             for ref_pred in ref_pred_list:
-                if ref_pred == tar_pred:
+                if ref_pred[0] == tar_pred[0]:
                     found = True
                     break
             if not found:
