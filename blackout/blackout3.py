@@ -147,11 +147,13 @@ class trajectory3(blackout2.trajectoryRevised):
                                             toAdd.add(candidates[i])
                                             toAdd.add(candidates[j])
                                         elif invariant.op_str in {'FST', 'NFST'}:
-                                            print('    Confirming second precondition candidate')
-                                            toAdd.add(candidates[j])
+                                            # print('    Confirming second precondition candidate')
+                                            # toAdd.add(candidates[j])
+                                            print('    First precondition candidate encodes no information; cannot confirm either candidate')
                                         elif invariant.op_str in {'SEC', 'NSEC'}:
-                                            print('    Confirming first precondition candidate')
-                                            toAdd.add(candidates[i])
+                                            # print('    Confirming first precondition candidate')
+                                            # toAdd.add(candidates[i])
+                                            print('    Second precondition candidate encodes no information; cannot confirm either candidate')
                                         elif invariant.op_str in {'NONE', 'AND', 'RNIM', 'NIMP', 'NOR'}:
                                             print('    Before-state appears to break invariant; this is probably an error')
                                         elif invariant.op_str in {'OR', 'REVI', 'IMPL', 'NAND', 'ALL'}:
