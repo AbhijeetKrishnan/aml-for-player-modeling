@@ -49,7 +49,7 @@ class trajectory:
     def parseActions(self, tokens):
         self.actions = {}
         for block in tokens:
-            if block[0] == ':action':
+            if block[0] == ':action' or block[0] == ':action-failed':  # FIXME is it safe to add failed actions?
                 act_in = block[1]
                 # print('Parsing action {}'.format(act_in))
                 parTypes = []
@@ -220,7 +220,9 @@ class actionCandidate:
         for parName, oldTypes, newType in zip(self.parNames, self.parameterTypes, parTypes):
             if newType not in oldTypes:
                 oldTypes.append(newType)
-            if parName not in self.types2pars[newType]:
+            if newType not in self.types2pars:
+                self.types2pars[newType] = []
+            elif parName not in self.types2pars[newType]:
                 self.types2pars[newType].append(parName)
 
     def createPrecons(self, trajectory):

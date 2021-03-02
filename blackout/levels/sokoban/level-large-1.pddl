@@ -1,0 +1,23 @@
+(define (domain sokoban-sequential.pddl)
+(:requirements :typing :negative-preconditions)
+(:types location - object direction - object player_stone - object stone - player_stone player - player_stone)
+(:predicates (is-goal ?0 - location) (is-nongoal ?0 - location) (move-dir ?0 - location ?1 - location ?2 - direction) (at ?0 - player_stone ?1 - location) (at-goal ?0 - stone) (clear ?0 - location))
+(:action move
+:parameters (?0player - player ?1location - location ?2location - location ?3direction - direction)
+:precondition (and (clear ?2location)
+)
+:effect (and (at ?0player ?2location) (clear ?1location)
+(not (at ?0player ?1location)) (not (clear ?2location))))
+(:action push-to-nongoal
+:parameters (?0player - player ?1stone - stone ?2location - location ?3location - location ?4location - location ?5direction - direction)
+:precondition (and (is-nongoal ?4location)
+(not (is-goal ?4location)))
+:effect (and (clear ?2location) (at ?0player ?3location) (at ?1stone ?4location)
+(not (at ?1stone ?3location)) (not (at ?0player ?2location)) (not (clear ?4location)) (not (at-goal ?1stone))))
+(:action push-to-goal
+:parameters (?0player - player ?1stone - stone ?2location - location ?3location - location ?4location - location ?5direction - direction)
+:precondition (and (is-goal ?4location) (clear ?4location)
+(not (is-nongoal ?4location)))
+:effect (and (clear ?2location) (at ?0player ?3location) (at ?1stone ?4location) (at-goal ?1stone)
+(not (at ?1stone ?3location)) (not (at ?0player ?2location)) (not (clear ?4location))))
+)

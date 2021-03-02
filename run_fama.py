@@ -9,12 +9,12 @@ from meta_planning.parsers import parse_trajectory, parse_model
 from meta_planning import LearningTask
 from meta_planning.evaluation import SynEvaluator
 
-model = sys.argv[1]
+empty = sys.argv[1]
 log = sys.argv[2]
-# models_folder = sys.argv[3]
+model = sys.argv[3]
 
 # Define the initial model
-M = parse_model(model)
+M = parse_model(empty)
 
 # Define the set of trajectories, observations
 #for log in os.listdir(logs_folder):
@@ -31,8 +31,8 @@ lt = LearningTask(M, O)
 solution = lt.learn()
 id = 1
 try:
-    print(solution.learned_model)
-    #with open(os.path.join(models_folder, f'model-{id}.pddl'), 'w') as model:
-    #    model.write(str(solution.learned_model))
+    # print(solution.learned_model)
+    with open(model, 'w') as m:
+        m.write(str(solution.learned_model))
 except AttributeError:
     print('No solution found')
