@@ -1,7 +1,9 @@
 ;; Cocktails:
 ;; - cocktail1 = ingredient1 + ingredient2
+;; - cocktail2 = ingredient2 + ingredient3
 ;; Goals:
 ;; - cocktail1 in shot1
+;; - cocktail2 in shot2
 
 (define (problem prob)
  (:domain barman)
@@ -9,9 +11,9 @@
      shaker1 - shaker
      left right - hand
      shot1 shot2 shot3 - shot
-     ingredient1 ingredient2 - ingredient
-     cocktail1 - cocktail
-     dispenser1 dispenser2 - dispenser
+     ingredient1 ingredient2 ingredient3 - ingredient
+     cocktail1 cocktail2 - cocktail
+     dispenser1 dispenser2 dispenser3 - dispenser
      l0 l1 l2 - level
 )
  (:init 
@@ -21,6 +23,7 @@
   (ontable shot3)
   (dispenses dispenser1 ingredient1)
   (dispenses dispenser2 ingredient2)
+  (dispenses dispenser3 ingredient3)
   (clean shaker1)
   (clean shot1)
   (clean shot2)
@@ -37,8 +40,11 @@
   (next l1 l2)
   (cocktail-part1 cocktail1 ingredient1)
   (cocktail-part2 cocktail1 ingredient2)
+  (cocktail-part1 cocktail2 ingredient2)
+  (cocktail-part2 cocktail2 ingredient3)
 )
  (:goal
   (and
      (contains shot1 cocktail1)
+     (contains shot2 cocktail2)
 )))

@@ -58,7 +58,6 @@ OBJ_STEM_COCKTAIL   = 'cocktail'
 
 """
     This is an engine for running the Barman domain from IPC 2014.
-    It is designed to result in many failed actions, in order to help the Blackout algorithm learn.
     While not exactly realistic, this is useful for proving a concept.
 """
 class Engine:
@@ -179,6 +178,9 @@ class Engine:
         for cont in containers:
             print("{:<8}: {}".format(cont, containers[cont]))
 
+        ingredients = self.get_objects(TYPE_INGREDIENT)
+        print("Available ingredients: " + ", ".join([str(i) for i in range(1, len(ingredients) + 1)]))
+
     def action(self):
         key = input("Choose action (q for help): ")
         key = key.lower()
@@ -226,9 +228,9 @@ class Engine:
         hand = OBJ_HAND_RIGHT
         # If right hand is holding something, put it down
         if not self.predicate_holds(PRED_HANDEMPTY, OBJ_HAND_RIGHT):
-            # Guess the container
+            # Find the container
             for cont in self.get_objects(TYPE_CONTAINER):
-                if self.predicate_holds(PRED_HOLDING, hand, cont):  # TODO
+                if self.predicate_holds(PRED_HOLDING, hand, cont):
                     assign = [hand, cont]
                     ground_act = self.ground_action(self.get_action(ACT_LEAVE), assign)
                     if self.try_action(ground_act):
@@ -241,6 +243,8 @@ class Engine:
         for i in range(len(containers)):
             print("{:<2}: {}".format(i, containers[i]))
         idx = int(input("Choose container: "))
+        if idx >= len(containers):
+            return
         cont = containers[idx]
 
         assign = [hand, cont]
@@ -251,9 +255,9 @@ class Engine:
         hand = OBJ_HAND_LEFT
         # If left hand is holding something, put it down
         if not self.predicate_holds(PRED_HANDEMPTY, OBJ_HAND_LEFT):
-            # Guess the container
+            # Find the container
             for cont in self.get_objects(TYPE_CONTAINER):
-                if self.predicate_holds(PRED_HOLDING, hand, cont):  # TODO
+                if self.predicate_holds(PRED_HOLDING, hand, cont):
                     assign = [hand, cont]
                     ground_act = self.ground_action(self.get_action(ACT_LEAVE), assign)
                     if self.try_action(ground_act):
@@ -266,6 +270,8 @@ class Engine:
         for i in range(len(containers)):
             print("{:<2}: {}".format(i, containers[i]))
         idx = int(input("Choose container: "))
+        if idx >= len(containers):
+            return
         cont = containers[idx]
 
         assign = [hand, cont]
@@ -301,18 +307,18 @@ class Engine:
         idx = input("Choose ingredient: ")
         ingr = OBJ_STEM_INGREDIENT + idx
 
-        # Guess the dispenser
+        # Find the dispenser
         for disp in self.get_objects(TYPE_DISPENSER):
-            if self.predicate_holds(PRED_DISPENES, disp, ingr):  # TODO
+            if self.predicate_holds(PRED_DISPENES, disp, ingr):
                 assign = [shot, ingr, hand1, hand2, disp]
                 ground_act = self.ground_action(self.get_action(ACT_FILL_SHOT), assign)
                 if self.try_action(ground_act):
                     return
 
         # If we failed to fill the shot, it might be used, so try to refill it
-        # Once again, guess the dispenser
+        # Once again, find the dispenser
         for disp in self.get_objects(TYPE_DISPENSER):
-            if self.predicate_holds(PRED_DISPENES, disp, ingr):  # TODO
+            if self.predicate_holds(PRED_DISPENES, disp, ingr):
                 assign = [shot, ingr, hand1, hand2, disp]
                 ground_act = self.ground_action(self.get_action(ACT_REFILL_SHOT), assign)
                 if self.try_action(ground_act):
@@ -323,28 +329,28 @@ class Engine:
         hand = OBJ_HAND_RIGHT if h == 'r' else OBJ_HAND_LEFT
 
         # First try empty-shot
-        # Guess the shot and beverage
+        # Find the shot and beverage
         for shot in self.get_objects(TYPE_SHOT):
-            if self.predicate_holds(PRED_HOLDING, hand, shot):  # TODO
+            if self.predicate_holds(PRED_HOLDING, hand, shot):
                 for bev in self.get_objects(TYPE_BEVERAGE):
-                    if self.predicate_holds(PRED_CONTAINS, shot, bev):  # TODO
+                    if self.predicate_holds(PRED_CONTAINS, shot, bev):
                         assign = [hand, shot, bev]
                         ground_act = self.ground_action(self.get_action(ACT_EMPTY_SHOT), assign)
                         if self.try_action(ground_act):
                             return
 
         # Try empty-shaker
-        # Guess the shaker, cocktail, and level
+        # Find the shaker, cocktail, and level
         for shaker in self.get_objects(TYPE_SHAKER):
-            if self.predicate_holds(PRED_HOLDING, hand, shaker):  # TODO
+            if self.predicate_holds(PRED_HOLDING, hand, shaker):
                 for cocktail in self.get_objects(TYPE_COCKTAIL):
-                    if self.predicate_holds(PRED_CONTAINS, shaker, cocktail):  # TODO
-                        # for level in self.get_objects(TYPE_LEVEL):
-                            level = OBJ_LEVEL_L2 if self.predicate_holds(PRED_SHAKER_LEVEL, shaker, OBJ_LEVEL_L2) else OBJ_LEVEL_L1
-                            assign = [hand, shaker, cocktail, level, OBJ_LEVEL_L0]
-                            ground_act = self.ground_action(self.get_action(ACT_EMPTY_SHAKER), assign)
-                            if self.try_action(ground_act):
-                                return
+                    if self.predicate_holds(PRED_CONTAINS, shaker, cocktail):
+                        level = OBJ_LEVEL_L2 if self.predicate_holds(PRED_SHAKER_LEVEL, shaker, OBJ_LEVEL_L2) \
+                                else OBJ_LEVEL_L1
+                        assign = [hand, shaker, cocktail, level, OBJ_LEVEL_L0]
+                        ground_act = self.ground_action(self.get_action(ACT_EMPTY_SHAKER), assign)
+                        if self.try_action(ground_act):
+                            return
 
     def clean(self):
         cont = None
@@ -393,9 +399,9 @@ class Engine:
             ground_act = self.ground_action(self.get_action(ACT_CLEAN_SHAKER), assign)
             self.try_action(ground_act)
         else:
-            # Guess the beverage
+            # Find the beverage
             for bev in self.get_objects(TYPE_BEVERAGE):
-                if self.predicate_holds(PRED_USED, cont, bev):  # TODO
+                if self.predicate_holds(PRED_USED, cont, bev):
                     assign = [cont, bev, hand1, hand2]
                     ground_act = self.ground_action(self.get_action(ACT_CLEAN_SHOT), assign)
                     if self.try_action(ground_act):
@@ -410,15 +416,17 @@ class Engine:
             print("{:<2}: {}".format(i, containers[i]))
         idx = int(input("Choose receptacle: "))
         dest = containers[idx]
+        if idx >= len(containers):
+            return
 
         # Pouring to shaker
         if dest in self.get_objects(TYPE_SHAKER):
-            # Guess the pouring shot
+            # Find the pouring shot
             for shot in self.get_objects(TYPE_SHOT):
-                if self.predicate_holds(PRED_HOLDING, hand, shot):  # TODO
-                    # Guess the ingredient and level
+                if self.predicate_holds(PRED_HOLDING, hand, shot):
+                    # Find the ingredient and level
                     for ingr in self.get_objects(TYPE_INGREDIENT):
-                        if self.predicate_holds(PRED_CONTAINS, shot, ingr):  # TODO
+                        if self.predicate_holds(PRED_CONTAINS, shot, ingr):
                             # Try level 0 to 1
                             assign = [shot, ingr, dest, hand, OBJ_LEVEL_L0, OBJ_LEVEL_L1]
                             # First try pour-shot-to-clean-shaker
@@ -447,12 +455,12 @@ class Engine:
                             self.try_action(ground_act)
         # Pouring to shot
         else:
-            # Guess the pouring shaker
+            # Find the pouring shaker
             for shaker in self.get_objects(TYPE_SHAKER):
-                if self.predicate_holds(PRED_HOLDING, hand, shaker):  # TODO
-                    # Guess the beverage and level
+                if self.predicate_holds(PRED_HOLDING, hand, shaker):
+                    # Find the beverage and level
                     for bev in self.get_objects(TYPE_BEVERAGE):
-                        if self.predicate_holds(PRED_CONTAINS, shaker, bev):  # TODO
+                        if self.predicate_holds(PRED_CONTAINS, shaker, bev):
                             # Try level 2 to 1
                             assign = [bev, dest, hand, shaker, OBJ_LEVEL_L2, OBJ_LEVEL_L1]
                             ground_act = self.ground_action(self.get_action(ACT_POUR_SHAKER_TO_SHOT), assign)
@@ -499,14 +507,15 @@ class Engine:
         idx = input("Choose cocktail: ")
         cocktail = OBJ_STEM_COCKTAIL + idx
 
-        # Guess ingredients
+        # Find ingredients
         for ingr1 in self.get_objects(TYPE_INGREDIENT):
-            for ingr2 in self.get_objects(TYPE_INGREDIENT):
-                if self.predicate_holds(PRED_CONTAINS, shaker, ingr1) and self.predicate_holds(PRED_CONTAINS, shaker, ingr2):  # TODO
-                    assign = [cocktail, ingr1, ingr2, shaker, hand1, hand2]
-                    ground_act = self.ground_action(self.get_action(ACT_SHAKE), assign)
-                    if self.try_action(ground_act):
-                        return
+            if self.predicate_holds(PRED_CONTAINS, shaker, ingr1):
+                for ingr2 in self.get_objects(TYPE_INGREDIENT):
+                    if self.predicate_holds(PRED_CONTAINS, shaker, ingr2):
+                        assign = [cocktail, ingr1, ingr2, shaker, hand1, hand2]
+                        ground_act = self.ground_action(self.get_action(ACT_SHAKE), assign)
+                        if self.try_action(ground_act):
+                            return
 
     def ground_action(self, act: Action, assign: list):
         variables = []
