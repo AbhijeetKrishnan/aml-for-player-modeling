@@ -1,5 +1,12 @@
-# Towards Action Model Learning for Player Moeling
+# Towards Action Model Learning for Player Modeling
 Code repository for Toward Action Model Learning for Player Modeling by Abhijeet Krishnan, Aaron Williams and Dr. Chris Martens
+
+*This repository is under active development. Please use the version tagged v1.0 to replicate the results from the paper. You may use the bash commands below.*
+
+```bash
+git fetch --all --tags
+git checkout tags/v1.0
+```
 
 # Feasibility Evaluation
 In this, we show that AML is a feasible approach to player modeling by successfully learning a player model using AML
