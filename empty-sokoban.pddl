@@ -10,23 +10,23 @@
                (MOVE-DIR ?from ?to - location ?dir - direction))
 
   (:action move
-   :parameters (?p - player ?from ?to - location ?dir - direction)
+   :parameters (?o1 - player ?from ?o2 - location ?o3 - direction)
    :precondition ()
    :effect       ()
    )
 
   (:action push-to-nongoal
-   :parameters (?p - player ?s - stone
-                ?ppos ?from ?to - location
-                ?dir - direction)
+   :parameters (?o1 - player ?o2 - stone
+                ?o3 ?from ?o4 - location
+                ?o5 - direction)
    :precondition ()
    :effect       ()
    )
 
   (:action push-to-goal
-   :parameters (?p - player ?s - stone
-                ?ppos ?from ?to - location
-                ?dir - direction)
+   :parameters (?o1 - player ?o2 - stone
+                ?o3 ?from ?o4 - location
+                ?o5 - direction)
    :precondition ()
    :effect       ()
    )
