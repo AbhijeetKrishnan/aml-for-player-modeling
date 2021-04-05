@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from PDDL import PDDL_Parser
-from action import Action
 from planner import Planner
 
 class Trajectory:
