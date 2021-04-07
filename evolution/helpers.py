@@ -2,288 +2,49 @@ import os
 import random
 import tempfile
 from deap import tools
+from library import *
 from evaluation import evaluate
 from pddl_problem import PddlProblem
 
-BLOCKS_WIDTH = 4
-BLOCKS_HEIGHT = 4
-WIDTH = 12
-HEIGHT = 12
+BLOCKS_X = 4
+BLOCKS_Y = 4
+BLOCK_WIDTH = 2
+BLOCK_HEIGHT = 2
+WIDTH = BLOCKS_X * BLOCK_WIDTH
+HEIGHT = BLOCKS_Y * BLOCK_HEIGHT
 NUM_STONES = 3
-
-lib_top_left = [
-    "###\n"
-    "#  \n"
-    "#  \n",
-
-    "###\n"
-    "#  \n"
-    "# $\n",
-
-    "###\n"
-    "#  \n"
-    "# .\n"
-]
-
-lib_top_right = [
-    "###\n"
-    "  #\n"
-    "  #\n",
-
-    "###\n"
-    "  #\n"
-    "$ #\n",
-
-    "###\n"
-    "  #\n"
-    ". #\n"
-]
-
-lib_bottom_left = [
-    "#  \n"
-    "#  \n"
-    "###\n",
-
-    "# $\n"
-    "#  \n"
-    "###\n",
-
-    "# .\n"
-    "#  \n"
-    "###\n"
-]
-
-lib_bottom_right = [
-    "  #\n"
-    "  #\n"
-    "###\n",
-
-    "$ #\n"
-    "  #\n"
-    "###\n",
-
-    ". #\n"
-    "  #\n"
-    "###\n"
-]
-
-lib_left = [
-    "#  \n"
-    "#  \n"
-    "#  \n",
-
-    "## \n"
-    "#  \n"
-    "#  \n",
-
-    "#  \n"
-    "## \n"
-    "#  \n",
-
-    "#  \n"
-    "#  \n"
-    "## \n",
-
-    "# $\n"
-    "#  \n"
-    "#  \n",
-
-    "#  \n"
-    "# $\n"
-    "#  \n",
-
-    "#  \n"
-    "#  \n"
-    "# $\n",
-
-    "# .\n"
-    "#  \n"
-    "#  \n",
-
-    "#  \n"
-    "# .\n"
-    "#  \n",
-
-    "#  \n"
-    "#  \n"
-    "# .\n"
-]
-
-lib_right = [
-    "  #\n"
-    "  #\n"
-    "  #\n",
-
-    " ##\n"
-    "  #\n"
-    "  #\n",
-
-    "  #\n"
-    " ##\n"
-    "  #\n",
-
-    "  #\n"
-    "  #\n"
-    " ##\n",
-
-    "$ #\n"
-    "  #\n"
-    "  #\n",
-
-    "  #\n"
-    "$ #\n"
-    "  #\n",
-
-    "  #\n"
-    "  #\n"
-    "$ #\n",
-
-    ". #\n"
-    "  #\n"
-    "  #\n",
-
-    "  #\n"
-    ". #\n"
-    "  #\n",
-
-    "  #\n"
-    "  #\n"
-    ". #\n"
-]
-
-lib_top = [
-    "###\n"
-    "   \n"
-    "   \n",
-
-    "###\n"
-    "#  \n"
-    "   \n",
-
-    "###\n"
-    " # \n"
-    "   \n",
-
-    "###\n"
-    "  #\n"
-    "   \n",
-
-    "###\n"
-    "   \n"
-    "$  \n",
-
-    "###\n"
-    "   \n"
-    " $ \n",
-
-    "###\n"
-    "   \n"
-    "  $\n",
-
-    "###\n"
-    "   \n"
-    ".  \n",
-
-    "###\n"
-    "   \n"
-    " . \n",
-
-    "###\n"
-    "   \n"
-    "  .\n"
-]
-
-lib_bottom = [
-    "   \n"
-    "   \n"
-    "###\n",
-
-    "   \n"
-    "#  \n"
-    "###\n",
-
-    "   \n"
-    " # \n"
-    "###\n",
-
-    "   \n"
-    "  #\n"
-    "###\n",
-
-    "$  \n"
-    "   \n"
-    "###\n",
-
-    " $ \n"
-    "   \n"
-    "###\n",
-
-    "  $\n"
-    "   \n"
-    "###\n",
-
-    ".  \n"
-    "   \n"
-    "###\n",
-
-    " . \n"
-    "   \n"
-    "###\n",
-
-    "  .\n"
-    "   \n"
-    "###\n"
-]
-
-lib_center = [
-    "   \n"
-    "   \n"
-    "   \n",
-
-    "   \n"
-    " @ \n"
-    "   \n",
-
-    "   \n"
-    " $ \n"
-    "   \n",
-
-    "   \n"
-    " . \n"
-    "   \n",
-]
 
 def init_level():
     # w = random.randint(3, 10)  # FIXME
     # h = random.randint(3, 10)
 
-    grid = [['' for _ in range(BLOCKS_HEIGHT)] for _ in range(BLOCKS_WIDTH)]
+    grid = [['' for _ in range(BLOCKS_Y)] for _ in range(BLOCKS_X)]
     valid = False
     while not valid:
         player = False  # Has the player been placed yet?
         stones = 0
         goals = 0
 
-        for y in range(BLOCKS_HEIGHT):
-            for x in range(BLOCKS_WIDTH):
+        for y in range(BLOCKS_Y):
+            for x in range(BLOCKS_X):
                 if y == 0:
                     if x == 0:
                         lib = lib_top_left
-                    elif x == BLOCKS_WIDTH - 1:
+                    elif x == BLOCKS_X - 1:
                         lib = lib_top_right
                     else:
                         lib = lib_top
-                elif y == BLOCKS_HEIGHT - 1:
+                elif y == BLOCKS_Y - 1:
                     if x == 0:
                         lib = lib_bottom_left
-                    elif x == BLOCKS_WIDTH - 1:
+                    elif x == BLOCKS_X - 1:
                         lib = lib_bottom_right
                     else:
                         lib = lib_bottom
                 else:
                     if x == 0:
                         lib = lib_left
-                    elif x == BLOCKS_WIDTH - 1:
+                    elif x == BLOCKS_X - 1:
                         lib = lib_right
                     else:
                         lib = lib_center
@@ -309,12 +70,12 @@ def init_level():
         if player and stones == NUM_STONES and goals == NUM_STONES:
             valid = True
         else:  # Reset
-            grid = [['' for _ in range(BLOCKS_HEIGHT)] for _ in range(BLOCKS_WIDTH)]
+            grid = [['' for _ in range(BLOCKS_Y)] for _ in range(BLOCKS_X)]
 
     level_str = ""
-    for y in range(BLOCKS_HEIGHT):
-        for sub_y in range(3):
-            for x in range(BLOCKS_WIDTH):
+    for y in range(BLOCKS_Y):
+        for sub_y in range(BLOCK_HEIGHT):
+            for x in range(BLOCKS_X):
                 block = grid[x][y]
                 lines = block.split('\n')
                 level_str += lines[sub_y]
@@ -323,6 +84,8 @@ def init_level():
     return level_str
 
 def eval_level(level):
+    print(level)
+
     temp_prob = tempfile.mkstemp()[1]
     temp_soln = tempfile.mkstemp()[1]
     temp_traj = tempfile.mkstemp()[1]
@@ -479,7 +242,7 @@ def check_crossover(grid):
 
 # Switch random walls and open spaces
 def mutate(level, prob):
-    for i in range(WIDTH, len(level) - (WIDTH+1)):  # Skip the top and bottom
+    for i in range(WIDTH, len(level) - (WIDTH + 1)):  # Skip the top and bottom
         if level[i-1] == '\n' or level[i+1] == '\n':  # Skip the left and right edges
             continue
 
