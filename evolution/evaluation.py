@@ -1,3 +1,4 @@
+from enum import Enum
 from PDDL import PDDL_Parser
 from statistics import mean
 
@@ -76,10 +77,43 @@ class Evaluation:
         return mean([act.f1 for act in self.action_evaluations])
 
 
-def evaluate(model):
+def eval_f1(model):
     reference = "../reference-sokoban.pddl"
     ref_parser, tar_parser = PDDL_Parser(), PDDL_Parser()
     ref_parser.parse_domain(reference)
     tar_parser.parse_domain(model)
     evaluation = Evaluation(ref_parser, tar_parser)
     return evaluation.avg_f1
+
+class Mode(Enum):
+    POS_PRE = 0
+    NEG_PRE = 1
+    POS_EFF = 2
+    NEG_EFF = 3
+
+def eval_single_target(model, tar_act, tar_mode, tar_pred):
+    parser = PDDL_Parser()
+    parser.parse_domain(model)
+
+    tar_pred = tar_pred.split(' ')
+
+    for action in parser.actions:
+        if action.name == tar_act:
+            if tar_mode == Mode.POS_PRE:
+                for pred in action.positive_preconditions:
+                    if pred == tar_pred:
+                        return 1
+            elif tar_mode == Mode.NEG_PRE:
+                for pred in action.negative_preconditions:
+                    if pred == tar_pred:
+                        return 1
+            elif tar_mode == Mode.POS_EFF:
+                for pred in action.add_effects:
+                    if pred == tar_pred:
+                        return 1
+            elif tar_mode == Mode.NEG_EFF:
+                for pred in action.del_effects:
+                    if pred == tar_pred:
+                        return 1
+
+    return 0

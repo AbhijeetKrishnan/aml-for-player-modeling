@@ -1,9 +1,8 @@
 import os
 import random
 import tempfile
-from deap import tools
+from deap import tools, algorithms
 from library import *
-from evaluation import evaluate
 from pddl_problem import PddlProblem
 
 BLOCKS_X = 4
@@ -83,7 +82,7 @@ def init_level():
 
     return level_str
 
-def eval_level(level):
+def eval_level(level, eval, **kwargs):
     print(level)
 
     temp_prob = tempfile.mkstemp()[1]
@@ -120,7 +119,7 @@ def eval_level(level):
     print(blackout_command)
     os.system(blackout_command)
 
-    score = evaluate(temp_model)
+    score = eval(temp_model, **kwargs)
 
     # Clean up
     os.remove(temp_prob)
@@ -253,3 +252,27 @@ def mutate(level, prob):
                 level = level[:i] + ' ' + level[i+1:]
 
     return level,
+
+def ea_until_target(pop, toolbox, cxpb, mutpb, tar, hof):
+    fitnesses = toolbox.map(toolbox.evaluate, pop)
+    for ind, fit in zip(pop, fitnesses):
+        ind.fitness.values = fit
+
+    for ind in pop:
+        if ind.fitness.values[0] == 1:
+            hof.insert(ind)
+            return ind
+
+    while True:
+        pop = toolbox.select(pop, k=len(pop))
+        pop = algorithms.varAnd(pop, toolbox, cxpb, mutpb)
+
+        invalids = [ind for ind in pop if not ind.fitness.valid]
+        fitnesses = toolbox.map(toolbox.evaluate, invalids)
+        for ind, fit in zip(invalids, fitnesses):
+            ind.fitness.values = fit
+
+        for ind in pop:
+            if ind.fitness.values == tar:
+                hof.insert(ind)
+                return ind

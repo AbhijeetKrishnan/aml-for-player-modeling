@@ -1,6 +1,7 @@
 import os
 import numpy
 import helpers
+import evaluation
 import multiprocessing
 from deap import base, creator, tools, algorithms
 
@@ -14,7 +15,9 @@ toolbox = base.Toolbox()
 toolbox.register('level', lambda: creator.Level(helpers.init_level()))  # Lambda to turn str into Level object
 toolbox.register('population', tools.initRepeat, list, toolbox.level)
 
-toolbox.register('evaluate', helpers.eval_level)
+toolbox.register('evaluate', helpers.eval_level, eval=evaluation.eval_single_target, tar_act='push-to-nongoal',
+                 tar_mode=evaluation.Mode.NEG_EFF, tar_pred='at-goal ?1stone')
+# toolbox.register('evaluate', helpers.eval_level, eval=evaluation.eval_f1)
 toolbox.register('select', tools.selTournament, tournsize=3)  # TODO selection method?
 
 # helpers.crossover returns regular strs, so we need this
@@ -30,5 +33,10 @@ toolbox.register('mutate', lambda a, prob: (creator.Level(helpers.mutate(a, prob
 
 pop = toolbox.population(n=10)
 hof = tools.HallOfFame(1)
-pop, log = algorithms.eaSimple(pop, toolbox, cxpb=0.5, mutpb=0.2, ngen=10, halloffame=hof, verbose=True)
+cxpb, mutpb = 0.5, 0.2
+
+# pop, log = algorithms.eaSimple(pop, toolbox, cxpb, mutpb, ngen=10, halloffame=hof, verbose=True)
+best = helpers.ea_until_target(pop, toolbox, cxpb, mutpb, tar=(1,), hof=hof)
+
 print(f"Best level is:\n{hof[0]} ...with fitness {hof[0].fitness}")
+print(f"Best level is:\n{best} ...with fitness {best.fitness}")
