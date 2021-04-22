@@ -91,29 +91,37 @@ class Mode(Enum):
     POS_EFF = 2
     NEG_EFF = 3
 
-def eval_single_target(model, tar_act, tar_mode, tar_pred):
-    parser = PDDL_Parser()
-    parser.parse_domain(model)
 
-    tar_pred = tar_pred.split(' ')
-
+def find_target(parser, tar_act, tar_mode, tar_pred):
     for action in parser.actions:
         if action.name == tar_act:
             if tar_mode == Mode.POS_PRE:
                 for pred in action.positive_preconditions:
                     if pred == tar_pred:
-                        return 1
+                        return True
             elif tar_mode == Mode.NEG_PRE:
                 for pred in action.negative_preconditions:
                     if pred == tar_pred:
-                        return 1
+                        return True
             elif tar_mode == Mode.POS_EFF:
                 for pred in action.add_effects:
                     if pred == tar_pred:
-                        return 1
+                        return True
             elif tar_mode == Mode.NEG_EFF:
                 for pred in action.del_effects:
                     if pred == tar_pred:
-                        return 1
+                        return True
 
-    return 0
+
+def eval_target(model, targets):
+    parser = PDDL_Parser()
+    parser.parse_domain(model)
+    fitness = 0
+
+    for tar in targets:
+        tar_act, tar_mode, tar_pred = tar
+        tar_pred = tar_pred.split(' ')
+        if find_target(parser, tar_act, tar_mode, tar_pred):
+            fitness += 1
+
+    return fitness / len(targets)

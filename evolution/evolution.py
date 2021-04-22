@@ -4,6 +4,7 @@ import helpers
 import evaluation
 import multiprocessing
 from deap import base, creator, tools, algorithms
+from evaluation import Mode
 
 creator.create('F1Max', base.Fitness, weights=(1.0,))  # level evaluated by average F1 score
 creator.create('Level', str, fitness=creator.F1Max)  # individual represented by level grid
@@ -15,8 +16,10 @@ toolbox = base.Toolbox()
 toolbox.register('level', lambda: creator.Level(helpers.init_level()))  # Lambda to turn str into Level object
 toolbox.register('population', tools.initRepeat, list, toolbox.level)
 
-toolbox.register('evaluate', helpers.eval_level, eval=evaluation.eval_single_target, tar_act='push-to-nongoal',
-                 tar_mode=evaluation.Mode.NEG_EFF, tar_pred='at-goal ?1stone')
+toolbox.register('evaluate', helpers.eval_level, eval=evaluation.eval_target,
+                 targets=[('push-to-nongoal', Mode.NEG_EFF, 'at-goal ?1stone'),
+                          ('move', Mode.POS_EFF, 'at ?0player ?2location'),
+                          ])
 # toolbox.register('evaluate', helpers.eval_level, eval=evaluation.eval_f1)
 toolbox.register('select', tools.selTournament, tournsize=3)  # TODO selection method?
 
