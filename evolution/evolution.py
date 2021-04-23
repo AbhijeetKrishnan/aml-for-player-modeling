@@ -1,12 +1,9 @@
-import os
-import numpy
 import helpers
 import evaluation
-import multiprocessing
 from deap import base, creator, tools, algorithms
 from evaluation import Mode
 
-creator.create('F1Max', base.Fitness, weights=(1.0,))  # level evaluated by average F1 score
+creator.create('F1Max', base.Fitness, weights=(1.0, 1.0))  # level evaluated by average F1 score
 creator.create('Level', str, fitness=creator.F1Max)  # individual represented by level grid
 
 def init_level():
@@ -30,9 +27,6 @@ def mate(level1, level2):
 
 toolbox.register('mate', mate)
 toolbox.register('mutate', lambda a, prob: (creator.Level(helpers.mutate(a, prob)[0]),), prob=0.1)
-
-# pool = multiprocessing.Pool()
-# toolbox.register('map', pool.map)
 
 pop = toolbox.population(n=10)
 hof = tools.HallOfFame(1)

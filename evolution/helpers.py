@@ -124,7 +124,7 @@ def eval_level(level, eval, **kwargs):
     print(blackout_command)
     os.system(blackout_command)
 
-    score = eval(temp_model, **kwargs)
+    scores = eval(temp_model, **kwargs)
 
     # Clean up
     os.remove(temp_prob)
@@ -132,7 +132,7 @@ def eval_level(level, eval, **kwargs):
     os.remove(temp_traj)
     os.remove(temp_model)
 
-    return score,
+    return scores
 
 # Crossover two levels on either the x or y axis
 def crossover(level1, level2):

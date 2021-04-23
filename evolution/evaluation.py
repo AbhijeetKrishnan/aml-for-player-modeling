@@ -2,17 +2,17 @@ from enum import Enum
 from PDDL import PDDL_Parser
 from statistics import mean
 
-def canonicalizeActionParameterNames(action):
-    parMap = {}
+def canonicalize_action_parameter_names(action):
+    par_map = {}
     for idx, par in enumerate(action.parameters):
-        parMap[par[0]] = '?{}'.format(idx + 1)
+        par_map[par[0]] = '?{}'.format(idx + 1)
     for predList in [action.parameters, action.positive_preconditions, action.negative_preconditions, action.add_effects, action.del_effects]:
         # print('Canonicalizing', predList)
         for pred in predList:
             # print(pred)
             for idx, param in enumerate(pred):
-                if param in parMap:
-                    pred[idx] = parMap[param]
+                if param in par_map:
+                    pred[idx] = par_map[param]
         # print('    Changed to', predList)
 
 class ActionEvaluation:
@@ -23,8 +23,8 @@ class ActionEvaluation:
         self.fn = 0
         self.name = ref_action.name
 
-        canonicalizeActionParameterNames(ref_action)
-        canonicalizeActionParameterNames(tar_action)
+        canonicalize_action_parameter_names(ref_action)
+        canonicalize_action_parameter_names(tar_action)
 
         self.__compare_predicate_list(ref_action.positive_preconditions, tar_action.positive_preconditions)
         self.__compare_predicate_list(ref_action.negative_preconditions, tar_action.negative_preconditions)
@@ -66,6 +66,9 @@ class ActionEvaluation:
 
 class Evaluation:
     def __init__(self, reference, target):
+        self.ref_actions = len(reference.actions)
+        self.tar_actions = len(target.actions)
+
         self.action_evaluations = []
         for ref_action in reference.actions:
             for tar_action in target.actions:
@@ -76,6 +79,10 @@ class Evaluation:
     def avg_f1(self):
         return mean([act.f1 for act in self.action_evaluations])
 
+    @property
+    def act_completeness(self):
+        return self.tar_actions / self.ref_actions
+
 
 def eval_f1(model):
     reference = "../reference-sokoban.pddl"
@@ -83,7 +90,7 @@ def eval_f1(model):
     ref_parser.parse_domain(reference)
     tar_parser.parse_domain(model)
     evaluation = Evaluation(ref_parser, tar_parser)
-    return evaluation.avg_f1
+    return evaluation.avg_f1, evaluation.act_completeness
 
 class Mode(Enum):
     POS_PRE = 0
@@ -124,4 +131,4 @@ def eval_target(model, targets):
         if find_target(parser, tar_act, tar_mode, tar_pred):
             fitness += 1
 
-    return fitness / len(targets)
+    return fitness / len(targets),
