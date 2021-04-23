@@ -13,6 +13,40 @@ WIDTH = BLOCKS_X * BLOCK_WIDTH
 HEIGHT = BLOCKS_Y * BLOCK_HEIGHT
 NUM_STONES = 3
 
+def choose(x, y, player, stones, goals):
+    if y == 0:
+        if x == 0:
+            lib = lib_top_left
+        elif x == BLOCKS_X - 1:
+            lib = lib_top_right
+        else:
+            lib = lib_top
+    elif y == BLOCKS_Y - 1:
+        if x == 0:
+            lib = lib_bottom_left
+        elif x == BLOCKS_X - 1:
+            lib = lib_bottom_right
+        else:
+            lib = lib_bottom
+    else:
+        if x == 0:
+            lib = lib_left
+        elif x == BLOCKS_X - 1:
+            lib = lib_right
+        else:
+            lib = lib_center()
+
+    choices = lib
+    if player:
+        choices = list(filter(lambda item: '@' not in item, choices))
+    if stones >= NUM_STONES:
+        choices = list(filter(lambda item: '$' not in item, choices))
+    if goals >= NUM_STONES:
+        choices = list(filter(lambda item: '.' not in item, choices))
+
+    return random.choice(choices)
+
+
 def init_level():
     # w = random.randint(3, 10)  # FIXME
     # h = random.randint(3, 10)
@@ -26,44 +60,15 @@ def init_level():
 
         for y in range(BLOCKS_Y):
             for x in range(BLOCKS_X):
-                if y == 0:
-                    if x == 0:
-                        lib = lib_top_left
-                    elif x == BLOCKS_X - 1:
-                        lib = lib_top_right
-                    else:
-                        lib = lib_top
-                elif y == BLOCKS_Y - 1:
-                    if x == 0:
-                        lib = lib_bottom_left
-                    elif x == BLOCKS_X - 1:
-                        lib = lib_bottom_right
-                    else:
-                        lib = lib_bottom
-                else:
-                    if x == 0:
-                        lib = lib_left
-                    elif x == BLOCKS_X - 1:
-                        lib = lib_right
-                    else:
-                        lib = lib_center
-
-                choices = list(filter(lambda item: ('@' not in item) and ('$' not in item) and ('.' not in item), lib))
-                if not player:
-                    choices += list(filter(lambda item: '@' in item, lib))
-                if stones < NUM_STONES:
-                    choices += list(filter(lambda item: '$' in item, lib))
-                if goals < NUM_STONES:
-                    choices += list(filter(lambda item: '.' in item, lib))
-
-                block = random.choice(choices)
+                block = choose(x, y, player, stones, goals)
                 grid[x][y] = block
-                if '@' in block:
-                    player = True
-                if '$' in block:
-                    stones += 1
-                if '.' in block:
-                    goals += 1
+                for char in block:
+                    if char == '@':
+                        player = True
+                    if char == '$':
+                        stones += 1
+                    if char == '.':
+                        goals += 1
 
         # Sanity check: is there a player and are there an equal number of stones and goals?
         if player and stones == NUM_STONES and goals == NUM_STONES:
