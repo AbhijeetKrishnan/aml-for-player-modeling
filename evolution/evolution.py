@@ -3,7 +3,7 @@ import evaluation
 from deap import base, creator, tools, algorithms
 from evaluation import Mode
 
-creator.create('F1Max', base.Fitness, weights=(1.0, 1.0))  # level evaluated by average F1 score
+creator.create('F1Max', base.Fitness, weights=(0.1, 1.0))  # level evaluated by average F1 score
 creator.create('Level', str, fitness=creator.F1Max)  # individual represented by level grid
 
 def init_level():

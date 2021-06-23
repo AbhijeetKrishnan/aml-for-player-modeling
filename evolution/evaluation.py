@@ -77,7 +77,10 @@ class Evaluation:
 
     @property
     def avg_f1(self):
-        return mean([act.f1 for act in self.action_evaluations])
+        if len(self.action_evaluations) == 0:
+            return 0
+        else:
+            return mean([act.f1 for act in self.action_evaluations])
 
     @property
     def act_completeness(self):
