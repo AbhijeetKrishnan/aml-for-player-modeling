@@ -1,0 +1,58 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Towards Action Model Learning for Player Modeling
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Abhijeet
+    family-names: Krishnan
+    email: akrish13@ncsu.edu
+    affiliation: North Carolina State University
+    orcid: 'https://orcid.org/0000-0002-0463-5105'
+  - given-names: Aaron
+    family-names: Williams
+    email: amwill19@ncsu.edu
+    affiliation: North Carolina State University
+  - given-names: Chris
+    family-names: Martens
+    email: martens@csc.ncsu.edu
+    affiliation: North Carolina State University
+    orcid: 'https://orcid.org/0000-0002-7026-0348'
+identifiers:
+  - type: url
+    value: >-
+      https://ojs.aaai.org/index.php/AIIDE/article/view/7436
+repository-code: >-
+  https://github.com/AbhijeetKrishnan/aml-for-player-modeling
+abstract: >-
+  Player modeling attempts to create a computational
+  model which accurately approximates a player’s
+  behavior in a game. Most player modeling techniques
+  rely on domain knowledge and are not transferable
+  across games. Additionally, player models do not
+  currently yield any explanatory insight about a
+  player’s cognitive processes, such as the creation
+  and refinement of mental models. In this paper, we
+  present our findings with using action model
+  learning (AML), in which an action model is learned
+  given data in the form of a play trace, to learn a
+  player model in a domain-agnostic manner. We
+  demonstrate the utility of this model by
+  introducing a technique to quantitatively estimate
+  how well a player understands the mechanics of a
+  game. We evaluate an existing AML algorithm (FAMA)
+  for player modeling and develop a novel algorithm
+  called Blackout that is inspired by player
+  cognition. We compare Blackout with FAMA using the
+  puzzle game Sokoban and show that Blackout
+  generates better player models.
+keywords:
+  - 'action model learning, player modeling'
+license: CC-BY-3.0
+commit: 88a5d8aefc6c7bf73ccff3fa13f83d448d9df149
+version: '1.0'
+date-released: '2021-03-02'
