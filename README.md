@@ -1,7 +1,7 @@
 # Towards Action Model Learning for Player Modeling
-Code repository for Toward Action Model Learning for Player Modeling by Abhijeet Krishnan, Aaron Williams and Dr. Chris Martens
+Code repository for the paper titled *Toward Action Model Learning for Player Modeling* by Abhijeet Krishnan, Aaron Williams and Dr. Chris Martens [[link](https://ojs.aaai.org/index.php/AIIDE/article/view/7436)]
 
-*This repository is under active development. Please use the version tagged v1.0 to replicate the results from the paper. You may use the bash commands below.*
+*This repository may be under active development. Please use the version tagged [v1.0](https://github.com/AbhijeetKrishnan/aml-for-player-modeling/releases/tag/v1.0) to replicate the results from the paper. You may use the bash commands below to checkout the correct version.*
 
 ```bash
 git fetch --all --tags
@@ -61,3 +61,21 @@ In this, we compare Blackout, our novel algorithm for AML, with FAMA, a SOTA alg
 
 ## Performance Evaluation
 The evaluation procedure is described in sufficient detail in the paper for reproducibility
+
+***
+
+If you wish to cite the original paper that uses this repository, please use
+
+```
+@article{Krishnan_Williams_Martens_2021, 
+    title={Towards Action Model Learning for Player Modeling}, 
+    volume={16}, 
+    url={https://ojs.aaai.org/index.php/AIIDE/article/view/7436}, 
+    number={1}, 
+    journal={Proceedings of the AAAI Conference on Artificial Intelligence and Interactive Digital Entertainment}, 
+    author={Krishnan, Abhijeet and Williams, Aaron and Martens, Chris}, 
+    year={2021}, 
+    month={Apr.}, 
+    pages={238-244},
+    abstractNote={&lt;p class=&quot;abstract&quot;&gt;Player modeling attempts to create a computational model which accurately approximates a player’s behavior in a game. Most player modeling techniques rely on domain knowledge and are not transferable across games. Additionally, player models do not currently yield any explanatory insight about a player’s cognitive processes, such as the creation and refinement of mental models. In this paper, we present our findings with using &lt;em&gt;action model learning&lt;/em&gt; (AML), in which an action model is learned given data in the form of a play trace, to learn a player model in a domain-agnostic manner. We demonstrate the utility of this model by introducing a technique to quantitatively estimate how well a player understands the mechanics of a game. We evaluate an existing AML algorithm (FAMA) for player modeling and develop a novel algorithm called Blackout that is inspired by player cognition. We compare Blackout with FAMA using the puzzle game Sokoban and show that Blackout generates better player models.&lt;/p&gt;} }
+```
